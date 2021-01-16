@@ -8,8 +8,23 @@ import moment from 'moment'
 import 'moment/locale/pt-br'
 
 import Task from '../components/Task'
+import { FlatList } from 'react-native-gesture-handler'
 
 export default class TaskList extends Component {
+   state = {
+      tasks: [{
+         id: Math.random(),
+         desc: 'Comprar Livro de React',
+         estimateAt: new Date(),
+         doneAt: new Date(),
+      }, {
+         id: Math.random(),
+         desc: 'Ler Livro de React',
+         estimateAt: new Date(),
+         doneAt: null,
+      }]
+   }
+   
    render() {
       const today = moment().local('pt-br').format('ddd, D [de] MMMM')
 
@@ -23,8 +38,9 @@ export default class TaskList extends Component {
             </ImageBackground>
 
             <View style = {styles.taskList}>
-               <Task desc = "Comprar livro" estimateAt = {new Date()} doneAt = {new Date()}/>
-               <Task desc = "Let livro" estimateAt = {new Date()} />
+               <FlatList data = {this.state.tasks} 
+                  keyExtractor = {item => `${item.id}`}
+                  renderItem = {({item}) => <Task {...item} />} />
             </View>  
          </View>
       )
