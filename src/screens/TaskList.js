@@ -24,7 +24,18 @@ export default class TaskList extends Component {
          doneAt: null,
       }]
    }
-   
+
+   toggleTask = taskId => {
+      const tasks = [...this.state.tasks]
+      tasks.forEach(task => {
+         if (task.id === taskId) {
+            task.doneAt = task.doneAt ? null : new Date()
+         }
+      })
+
+      this.setState({ tasks })
+   }
+
    render() {
       const today = moment().local('pt-br').format('ddd, D [de] MMMM')
 
@@ -40,7 +51,7 @@ export default class TaskList extends Component {
             <View style = {styles.taskList}>
                <FlatList data = {this.state.tasks} 
                   keyExtractor = {item => `${item.id}`}
-                  renderItem = {({item}) => <Task {...item} />} />
+                  renderItem = {({item}) => <Task {...item} toggleTask = {this.toggleTask} />} />
             </View>  
          </View>
       )
