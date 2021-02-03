@@ -8,7 +8,7 @@ module.exports = app => {
          .where({ userId: request.user.id })
          .where('estimateAt', '<=', date)
          .orderBy('estimateAt')
-         .then(tasks = response.json(tasks))
+         .then(tasks => response.json(tasks))
          .catch(error => response.status(400).json(error))
    }
 
@@ -37,7 +37,32 @@ module.exports = app => {
                response.status(400).send(message)
             }
          })
-
          .catch(error => response.status(400).json(error))
    }
+
+   const updateTaskDoneAt = (request, response, doneAt) => {
+      app.db('tasks')
+         .where({ id: request.params.id, userId: request.user.id })
+         .update({ doneAt })
+         .then(_ => response.status(204).send())
+         .catch(error => response.status(400).json(error))
+   }
+
+   const toggleTask = (request, response) => {
+      app.db('tasks')
+         .where({ id: request.params.id, userId: request.user.id })
+         .first()
+         .then(task => {
+            if (!task) {
+               const message = `Task with ID: ${request.params.id} not found.`
+               return response.status(400).send(message)
+            }
+
+            const doneAt = task.doneAt ? null : new Date()
+            updateTaskDoneAt(request, response, doneAt)
+         })
+         .catch(error => response.status(400).json(error))
+   }
+
+   return { getTasks, save, remove, toggleTask }
 }
