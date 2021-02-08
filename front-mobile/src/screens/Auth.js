@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ImageBackground, Text, StyleSheet, View, TextInput, TouchableOpacity, Platform } from 'react-native'
+import { ImageBackground, Text, StyleSheet, View, TextInput, TouchableOpacity, Platform, Alert, StatusBar } from 'react-native'
 
 import backgroundImage from '../../assets/imgs/login.jpg'
 
@@ -12,12 +12,21 @@ export default class Auth extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      stageNew: true
+      stageNew: false
+   }
+
+   signinOrsignup = () => {
+      if (this.state.stageNew) {
+         Alert.alert('Sucesso!', 'Criar conta')
+      } else {
+         Alert.alert('Sucesso!', 'Logar')
+      }
    }
 
    render() {
       return (
          <ImageBackground source = {backgroundImage} style = {styles.background}>
+            <StatusBar />
             <Text style = {styles.title}>Tasks</Text>
             <View style = {styles.formContainer}>
                <Text style = {styles.subtitle}>
@@ -35,7 +44,7 @@ export default class Auth extends Component {
                   &&
                   <TextInput placeholder = 'Confirmar Senha' value = {this.state.confirmPassword} style = {styles.input} onChangeText = {confirmPassword => this.setState({ confirmPassword })} />
                }
-               <TouchableOpacity>
+               <TouchableOpacity onPress = {this.signinOrsignup}>
                   <View style = {styles.button}>
                      <Text style = {styles.buttonText}>
                         {this.state.stageNew ? 'Registrar' : 'Entrar'}
@@ -43,6 +52,11 @@ export default class Auth extends Component {
                   </View>
                </TouchableOpacity>
             </View>
+            <TouchableOpacity style = {{ padding: 10 }} onPress = {() => this.setState({ stageNew: !this.state.stageNew })}>
+               <Text style = {styles.buttonText}>
+                  {this.state.stageNew ? 'Já possui conta?' : 'Ainda não possui conta?'}
+               </Text>
+            </TouchableOpacity>
          </ImageBackground>
       )
    }
