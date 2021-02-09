@@ -1,25 +1,48 @@
 import React, { Component } from 'react'
 import { ImageBackground, Text, StyleSheet, View, TouchableOpacity, Alert, StatusBar } from 'react-native'
+import axios from 'axios'
 
 import backgroundImage from '../../assets/imgs/login.jpg'
 import commonStyles from '../commomStyles'
 import AuthInput from '../components/AuthInput'
 
+import { server, showError, showSuccess } from '../common'
+
+const initialState = {
+   name: '',
+   email: '',
+   password: '',
+   confirmPassword: '',
+   stageNew: false
+}
+
 export default class Auth extends Component {
 
    state = {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      stageNew: false
+      ...initialState
    }
 
    signinOrsignup = () => {
       if (this.state.stageNew) {
-         Alert.alert('Sucesso!', 'Criar conta')
+         this.signup()
       } else {
          Alert.alert('Sucesso!', 'Logar')
+      }
+   }
+
+   signup = async () => {
+      try {
+         await axios.post(`${server}/signup`, {
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password,
+            confirmPassword: this.state.confirmPassword,
+         })
+
+         showSuccess('Usuário cadastrado!')
+         this.setState({ ...initialState })
+      } catch(e) {
+         showError(e)
       }
    }
 
@@ -42,7 +65,7 @@ export default class Auth extends Component {
                {
                   this.state.stageNew
                   &&
-                  <AuthInput icon = 'lock' placeholder = 'Confirmar Senha' value = {this.state.confirmPassword} style = {styles.input} onChangeText = {confirmPassword => this.setState({ confirmPassword })} />
+                  <AuthInput icon = 'lock' placeholder = 'Confirmar Senha' value = {this.state.confirmPassword} style = {styles.input} secureTextEntry = {true} onChangeText = {confirmPassword => this.setState({ confirmPassword })} />
                }
                <TouchableOpacity onPress = {this.signinOrsignup}>
                   <View style = {styles.button}>
