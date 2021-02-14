@@ -39,7 +39,7 @@ export default class TaskList extends Component {
 
    loadTasks = async () => {
       try {
-         const maxDate = moment().format('YYYY-MM-DD 23:59:59')
+         const maxDate = moment().add({ days: this.props.daysAhead}).format('YYYY-MM-DD 23:59:59')
          const response = await axios.get(`${server}/tasks?date=${maxDate}`)
          this.setState({ tasks: response.data }, this.filterTasks)
       } catch(e) {
@@ -114,13 +114,16 @@ export default class TaskList extends Component {
 
             <ImageBackground source = {todayImage} style = {styles.background}>
                <View style = {styles.iconBar}>
+                  <TouchableOpacity onPress = {() => this.props.navigation.openDrawer()}>
+                     <Icon name = 'bars' size = {20} color = {commonStyles.colors.secondary} />
+                  </TouchableOpacity>
                   <TouchableOpacity onPress = {this.toggleFilter}>
                      <Icon name = {this.state.showDoneTasks ? "eye" : "eye-slash"} size = {20} color = {commonStyles.colors.secondary} />
                   </TouchableOpacity>
                </View>
 
                <View style = {styles.titlebar}>
-                  <Text style = {styles.title}>Hoje</Text>
+                  <Text style = {styles.title}>{this.props.title}</Text>
                   <Text style = {styles.subTitle}>{today}</Text>
                </View>
             </ImageBackground>
@@ -170,7 +173,7 @@ const styles = StyleSheet.create({
    iconBar: {
       flexDirection: 'row',
       marginHorizontal: 20,
-      justifyContent: 'flex-end',
+      justifyContent: 'space-between',
       marginTop: Platform.OS === 'ios' ? 40 : 10
    },
    addButton: {
