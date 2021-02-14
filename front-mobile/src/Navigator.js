@@ -27,28 +27,28 @@ const menuRoutes = {
    Today: {
       name: 'Today',
       screen: props => <TaskList title = 'Hoje' daysAhead = {0} {...props} />,
-      navigationOptuons: {
+      navigationOptions: {
          title: 'Hoje'
       }
    },
    Tomorrow: {
       name: 'Tomorrow',
       screen: props => <TaskList title = 'Amanhã' daysAhead = {1} {...props} />,
-      navigationOptuons: {
+      navigationOptions: {
          title: 'Amanhã'
       }
    },
    Week: {
       name: 'Week',
       screen: props => <TaskList title = 'Semana' daysAhead = {7} {...props} />,
-      navigationOptuons: {
+      navigationOptions: {
          title: 'Semana'
       }
    },
    Month: {
       name: 'Month',
       screen: props => <TaskList title = 'Mês' daysAhead = {30} {...props} />,
-      navigationOptuons: {
+      navigationOptions: {
          title: 'Mês'
       }
    }
