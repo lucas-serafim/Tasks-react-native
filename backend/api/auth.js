@@ -15,7 +15,7 @@ module.exports = app => {
       if (user) {
          bcrypt.compare(request.body.password, user.password, (error, isMatch) => {
             if (error || !isMatch){
-               return response.status(401).send()
+               return response.status(401).send('Sua senha está errada')
             }
 
             const payload = { id: user.id }
@@ -27,7 +27,7 @@ module.exports = app => {
             })
          })
       } else {
-         response.status(400).send('User not found.')
+         response.status(400).send('Usuário não encontrado.')
       }
    }
 
