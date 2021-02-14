@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import { Alert, View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity, Platform, StatusBar } from 'react-native'
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import commonStyles from '../commomStyles'
+
 import todayImage from '../../assets/imgs/today.jpg'
+import tomorrowImage from '../../assets/imgs/tomorrow.jpg'
+import weekImage from '../../assets/imgs/week.jpg'
+import monthImage from '../../assets/imgs/month.jpg'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 import axios from 'axios'
@@ -103,16 +107,34 @@ export default class TaskList extends Component {
       }
    }
 
+   getImage = () => {
+      switch(this.props.daysAhead) {
+         case 0: return todayImage
+         case 1: return tomorrowImage
+         case 7: return weekImage
+         default: return monthImage
+      }
+   }
+
+   getColor = () => {
+      switch(this.props.daysAhead) {
+         case 0: return commonStyles.colors.today
+         case 1: return commonStyles.colors.tomorrow
+         case 7: return commonStyles.colors.week
+         default: return commonStyles.colors.month
+      }
+   }
+
    render() {
       const today = moment().local('pt-br').format('ddd, D [de] MMMM')
 
       return (
          <View style = {styles.container}>
-            <StatusBar />
+            <StatusBar  />
             
             <AddTask isVisible = {this.state.showAddTask} onCancel = {() => this.setState({ showAddTask: false })} onSave = {this.addTask} />
 
-            <ImageBackground source = {todayImage} style = {styles.background}>
+            <ImageBackground source = {this.getImage()} style = {styles.background}>
                <View style = {styles.iconBar}>
                   <TouchableOpacity onPress = {() => this.props.navigation.openDrawer()}>
                      <Icon name = 'bars' size = {20} color = {commonStyles.colors.secondary} />
@@ -134,7 +156,7 @@ export default class TaskList extends Component {
                   renderItem = {({item}) => <Task {...item} onToggleTask = {this.toggleTask} onDelete = {this.deleteTask} />} />
             </View>
 
-            <TouchableOpacity style = {styles.addButton} onPress = {() => this.setState({ showAddTask: true })} activeOpacity = {0.7}>
+            <TouchableOpacity style = {[styles.addButton, { backgroundColor: this.getColor() }]} onPress = {() => this.setState({ showAddTask: true })} activeOpacity = {0.7}>
                <Icon name = "plus" size = {20} color = {commonStyles.colors.secondary} />
             </TouchableOpacity>
          </View>
@@ -183,7 +205,6 @@ const styles = StyleSheet.create({
       width: 50,
       height: 50,
       borderRadius: 25,
-      backgroundColor: commonStyles.colors.today,
       justifyContent: 'center',
       alignItems: 'center'
    }
