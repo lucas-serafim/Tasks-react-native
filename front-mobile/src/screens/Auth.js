@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ImageBackground, Text, StyleSheet, View, TouchableOpacity, Alert, StatusBar } from 'react-native'
+import { ImageBackground, Text, StyleSheet, View, TouchableOpacity, StatusBar } from 'react-native'
 import axios from 'axios'
 
 import backgroundImage from '../../assets/imgs/login.jpg'
